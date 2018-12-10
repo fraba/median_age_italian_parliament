@@ -123,27 +123,29 @@ population_dat <-
   rbind(median_age_by_year1, median_age_by_year2)
 
 dat <-
-  rbind(parliament_dat %>% mutate(what = 'Italian parliament'), 
+  rbind(parliament_dat %>% mutate(what = 'Italian Lower house'), 
         population_dat %>% mutate(what = 'Italian population'))
 
 
 italian_general_elections <- 
-  read_csv("~/public_git/media_age_ita_parliament/italian_general_elections.csv")
+  read_csv("italian_general_elections.csv")
 
-ggplot() + 
-  geom_line(data = dat, 
-            aes(x=date, y=median_age, colour = what),
-            size = .8) + 
-  scale_x_date(limits = as.Date(c("1948-01-01", "2019-01-01")),
-               breaks = as.Date(italian_general_elections$date[
-                 italian_general_elections$date >= as.Date("1948-01-01")]),
-               date_labels = "%b-%Y") + 
-  scale_y_continuous(breaks = c(30,40,46,50)) +
-  theme_bw() + 
-  theme(panel.grid.minor=element_blank(),
-        axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_color_brewer(palette = 'Set1') + 
-  labs(x=NULL, y='median age',colour=NULL, caption = "@FrBailo, Data: ")
+ggsave("~/public_git/median_age_italian_parliament/plot.pdf", width = 10, height = 6,
+       ggplot() + 
+         geom_line(data = dat, 
+                   aes(x=date, y=median_age, colour = what),
+                   size = .65) + 
+         scale_x_date(limits = as.Date(c("1948-01-01", "2019-01-01")),
+                      breaks = as.Date(italian_general_elections$date[
+                        italian_general_elections$date >= as.Date("1948-01-01")]),
+                      date_labels = "%b-%Y") + 
+         scale_y_continuous(breaks = c(30,40,46,50)) +
+         theme_bw() + 
+         theme(panel.grid.minor=element_blank(),
+               axis.text.x = element_text(angle = 45, hjust = 1),
+               legend.position = 'bottom') +
+         scale_color_brewer(palette = 'Set1') + 
+         labs(x="general elections", y='median age',colour=NULL, caption = "@FrBailo, Code&Data: tinyurl.com/y84myzbr"))
   
   
 
